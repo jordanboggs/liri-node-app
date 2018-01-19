@@ -8,4 +8,12 @@ const twitterKeys = {
   access_token_secret: 'ZYLYcrNGqg1u3euJaI9I2ePO1LBBsCh1j61eWhJm6aSgz',
 }
 
-module.exports = twitterKeys;
+const spotifyKeys = {
+  client_id: 'bc8bce2ea8d34b198b860da887bee2dd',
+  client_secret: '6f5ea275eda344c1874b82f0308c5257'
+}
+
+module.exports = {
+  twitterKeys: twitterKeys,
+  spotifyKeys: spotifyKeys
+};

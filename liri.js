@@ -7,6 +7,7 @@
 
 const keys = require("./keys.js");
 const Twitter = require("twitter");
+const Spotify = require("node-spotify-api");
 
 /* Functions! */
 // const logIt = function() {
@@ -14,24 +15,26 @@ const Twitter = require("twitter");
 // }
 
 const myTweets = function(user) {
-  // This will show your last 20 tweets and when they were created at in your
-  // terminal/bash window.
+  // This will show the last 20 tweets for a user and when they were created
+  // in your terminal/bash window.
   const client = new Twitter({
-    consumer_key: keys.consumer_key,
-    consumer_secret: keys.consumer_secret,
-    access_token_key: keys.access_token_key,
-    access_token_secret: keys.access_token_secret
+    consumer_key: keys.twitterKeys.consumer_key,
+    consumer_secret: keys.twitterKeys.consumer_secret,
+    access_token_key: keys.twitterKeys.access_token_key,
+    access_token_secret: keys.twitterKeys.access_token_secret
   });
 
   if (!user) {
     user = "cher";
-    console.log("Loading default Twitter user, @cher\n");
+    console.log("You can specify a user with format 'node liri.js <user>'\n" +
+      "Loading default Twitter user, @cher. But the emojis won't work :(\n");
   }
 
   let twitterFeed = client.get("statuses/user_timeline",
    {screen_name: user, count: 20}, function(error, tweets, response) {
     if (error) {
       console.log(error);
+      return;
     }
     else {
       for (index = 0; index < tweets.length; index++) {
@@ -41,7 +44,7 @@ const myTweets = function(user) {
   });
 };
 
-const spotifyThisSong = function() {
+const spotifyThisSong = function(song) {
   /*
    * This will show the following information about the song in your4
    * terminal/bash window:
@@ -52,9 +55,43 @@ const spotifyThisSong = function() {
    * If no song is provided then your program will default to "The Sign"
    * by Ace of Base.
    */
+  if (!song) {
+    song = '"The Sign"';
+    console.log("You can specify a song with format 'node liri.js <song>'\n" +
+      "The default song is The Sign by Ace of Base.\n");
+  }
+
+  const spotify = new Spotify({
+    id: keys.spotifyKeys.client_id,
+    secret: keys.spotifyKeys.client_secret
+  });
+
+  spotify
+    .search({ type: 'track', query: song, limit: 5 })
+    .then(function(response) {
+      for (let itemIndex = 0; itemIndex < response.tracks.items.length; itemIndex++) {
+        let artistsArray = [];
+        for (let artistIndex = 0;
+            artistIndex < response.tracks.items[itemIndex].artists.length;
+            artistIndex++) {
+          artistsArray.push(response.tracks.items[itemIndex].artists[artistIndex]
+            .name);
+        }
+        console.log("Artist(s): " + artistsArray.join(", "));
+        console.log("Album: "+response.tracks.items[itemIndex].album.name)
+        console.log("Title: "+response.tracks.items[itemIndex].name);
+        console.log("Preview: "+response.tracks.items[itemIndex].preview_url);
+        if (response.tracks.items.length > 1 && itemIndex < response.tracks.items.length - 1) {
+          console.log("----------");
+        }
+      }
+    })
+    .catch(function(err) {
+      console.log(err);
+  });
 };
 
-const movieThis = function() {
+const movieThis = function(movie) {
   /*
    * This will output the following information to your terminal/bash window:
    * * Title of the movie.
@@ -78,18 +115,21 @@ const doWhatItSays = function() {
 /* Commands */
 switch (process.argv[2]) {
   case "my-tweets":
+    // get-tweets makes more sense semantically, but I'm leaving my-tweets in
+    // for the sake of homework
+  case "get-tweets":
     myTweets(process.argv[3]);
     break;
   case "spotify-this-song":
-    spotifyThisSong();
+    spotifyThisSong(process.argv[3]);
     break;
   case "movie-this":
-    movieThis();
+    movieThis(process.argv[3]);
     break;
   case "do-what-it-says":
     doWhatItSays();
     break;
   default:
-    console.log("ERROR: Valid commands are my-tweets, spotify-this-song, " +
+    console.log("ERROR: Valid commands are get-tweets, spotify-this-song, " +
       "movie-this, do-what-it-says");
 }
