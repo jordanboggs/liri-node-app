@@ -1,14 +1,44 @@
-/* Import Twitter keys */
-const twitterKeys = require("./keys.js");
+/*
+ * Language Interpretation and Recognition Interface (LIRI)
+ * By Jordan Boggs
+ * Submitted as part of University of Denver Coding Bootcamp
+ * January 2018
+ */
+
+const keys = require("./keys.js");
+const Twitter = require("twitter");
 
 /* Functions! */
-const logIt = function() {
-  // This will log the command and the data it outputs to log.txt
-}
+// const logIt = function() {
+//   // This will log the command and the data it outputs to log.txt
+// }
 
-const myTweets = function() {
+const myTweets = function(user) {
   // This will show your last 20 tweets and when they were created at in your
   // terminal/bash window.
+  const client = new Twitter({
+    consumer_key: keys.consumer_key,
+    consumer_secret: keys.consumer_secret,
+    access_token_key: keys.access_token_key,
+    access_token_secret: keys.access_token_secret
+  });
+
+  if (!user) {
+    user = "cher";
+    console.log("Loading default Twitter user, @cher\n");
+  }
+
+  let twitterFeed = client.get("statuses/user_timeline",
+   {screen_name: user, count: 20}, function(error, tweets, response) {
+    if (error) {
+      console.log(error);
+    }
+    else {
+      for (index = 0; index < tweets.length; index++) {
+        console.log(`${(index + 1)}: ${tweets[index].text}`);
+      }
+    }
+  });
 };
 
 const spotifyThisSong = function() {
@@ -48,7 +78,7 @@ const doWhatItSays = function() {
 /* Commands */
 switch (process.argv[2]) {
   case "my-tweets":
-    myTweets();
+    myTweets(process.argv[3]);
     break;
   case "spotify-this-song":
     spotifyThisSong();
