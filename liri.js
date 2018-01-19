@@ -8,11 +8,19 @@
 const keys = require("./keys.js");
 const Twitter = require("twitter");
 const Spotify = require("node-spotify-api");
+const fs = require("fs");
 
 /* Functions! */
-// const logIt = function() {
-//   // This will log the command and the data it outputs to log.txt
-// }
+const logIt = function(string) {
+  // This will log the command and the data it outputs to log.txt
+  console.log(string);
+  fs.appendFileSync("log.txt", string + "\n", function(err) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  })
+}
 
 const myTweets = function(user) {
   // This will show the last 20 tweets for a user and when they were created
@@ -38,7 +46,7 @@ const myTweets = function(user) {
     }
     else {
       for (index = 0; index < tweets.length; index++) {
-        console.log(`${(index + 1)}: ${tweets[index].text}`);
+        logIt(`${(index + 1)}: ${tweets[index].text}`);
       }
     }
   });
@@ -77,12 +85,12 @@ const spotifyThisSong = function(song) {
           artistsArray.push(response.tracks.items[itemIndex].artists[artistIndex]
             .name);
         }
-        console.log("Artist(s): " + artistsArray.join(", "));
-        console.log("Album: "+response.tracks.items[itemIndex].album.name)
-        console.log("Title: "+response.tracks.items[itemIndex].name);
-        console.log("Preview: "+response.tracks.items[itemIndex].preview_url);
+        logIt("Artist(s): " + artistsArray.join(", "));
+        logIt("Album: "+response.tracks.items[itemIndex].album.name)
+        logIt("Title: "+response.tracks.items[itemIndex].name);
+        logIt("Preview: "+response.tracks.items[itemIndex].preview_url);
         if (response.tracks.items.length > 1 && itemIndex < response.tracks.items.length - 1) {
-          console.log("----------");
+          logIt("----------");
         }
       }
     })
@@ -121,15 +129,15 @@ const movieThis = function(movie) {
       }
       else {
         let parsedResponse = JSON.parse(response.body);
-        console.log("Title: " + parsedResponse.Title);
-        console.log("Year: " + parsedResponse.Year);
-        console.log("IMDB Rating: " + parsedResponse.imdbRating);
-        console.log("Rotten Tomatoes Rating: " +
+        logIt("Title: " + parsedResponse.Title);
+        logIt("Year: " + parsedResponse.Year);
+        logIt("IMDB Rating: " + parsedResponse.imdbRating);
+        logIt("Rotten Tomatoes Rating: " +
          parsedResponse.Ratings[2].Value);
-        console.log("Country: " + parsedResponse.Country);
-        console.log("Language: " + parsedResponse.Language);
-        console.log("Plot: " + parsedResponse.Plot);
-        console.log("Actors: " + parsedResponse.Actors);
+        logIt("Country: " + parsedResponse.Country);
+        logIt("Language: " + parsedResponse.Language);
+        logIt("Plot: " + parsedResponse.Plot);
+        logIt("Actors: " + parsedResponse.Actors);
       }
     });
 };
@@ -137,7 +145,6 @@ const movieThis = function(movie) {
 const doWhatItSays = function() {
   // Using the fs Node package, LIRI will take the text inside of random.txt
   // and then use it to call one of LIRI's commands.
-  const fs = require("fs");
 
   fs.readFile("random.txt", "utf8", function(error, data) {
     if (error) {
