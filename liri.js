@@ -176,15 +176,65 @@ switch (process.argv[2]) {
     // get-tweets makes more sense semantically, but I'm leaving my-tweets in
     // for the sake of homework
   case "get-tweets":
+    if (!process.argv[3]){
+      fs.appendFileSync("log.txt", "\nget-tweets:" + "\n", function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    else {
+      fs.appendFileSync("log.txt", "\nget-tweets: "+ process.argv[3] +
+        "\n", function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
     myTweets(process.argv[3]);
     break;
   case "spotify-this-song":
+    if (!process.argv[3]){
+      fs.appendFileSync("log.txt", "\nspotify-this-song:" + "\n", function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    else {
+      fs.appendFileSync("log.txt", "\nspotify-this-song: "+ process.argv[3] +
+        "\n", function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
     spotifyThisSong(process.argv[3]);
     break;
   case "movie-this":
+    if (!process.argv[3]){
+      fs.appendFileSync("log.txt", "\nmovie-this:" + "\n", function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    else {
+      fs.appendFileSync("log.txt", "\nmovie-this: "+ process.argv[3] +
+        "\n", function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
     movieThis(process.argv[3]);
     break;
   case "do-what-it-says":
+    fs.appendFileSync("log.txt", "\ndo-what-it-says:\n", function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
     doWhatItSays();
     break;
   default:
