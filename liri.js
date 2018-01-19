@@ -105,11 +105,62 @@ const movieThis = function(movie) {
    * If the user doesn't type a movie in, the program will output data for the
    * movie 'Mr. Nobody.'
    */
+   const request = require("request");
+
+   if (!movie) {
+     movie = '"Mr. Nobody"';
+     console.log("You can specify a movie with format 'node liri.js <movie>'" +
+      "\nThe default movie is Mr. Nobody.\n");
+   }
+
+   request('http://www.omdbapi.com/?apikey=trilogy&t='+movie, /*{options: "json"},*/
+    function(error, response, body) {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      else {
+        let parsedResponse = JSON.parse(response.body);
+        console.log("Title: " + parsedResponse.Title);
+        console.log("Year: " + parsedResponse.Year);
+        console.log("IMDB Rating: " + parsedResponse.imdbRating);
+        console.log("Rotten Tomatoes Rating: " +
+         parsedResponse.Ratings[2].Value);
+        console.log("Country: " + parsedResponse.Country);
+        console.log("Language: " + parsedResponse.Language);
+        console.log("Plot: " + parsedResponse.Plot);
+        console.log("Actors: " + parsedResponse.Actors);
+      }
+    });
 };
 
 const doWhatItSays = function() {
   // Using the fs Node package, LIRI will take the text inside of random.txt
   // and then use it to call one of LIRI's commands.
+  const fs = require("fs");
+
+  fs.readFile("random.txt", "utf8", function(error, data) {
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    let dataArray = data.split(",");
+    switch (dataArray[0]) {
+      case "my-tweets":
+      case "get-tweets":
+        myTweets(dataArray[1]);
+        break;
+      case "spotify-this-song":
+        spotifyThisSong(dataArray[1]);
+        break;
+      case "movie-this":
+        movieThis(dataArray[1]);
+        break;
+      default:
+        console.log("File random.txt did not have valid data.");
+    }
+  });
 };
 
 /* Commands */
