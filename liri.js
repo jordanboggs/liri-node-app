@@ -25,6 +25,7 @@ const logIt = function(string) {
 const myTweets = function(user) {
   // This will show the last 20 tweets for a user and when they were created
   // in your terminal/bash window.
+
   const client = new Twitter({
     consumer_key: keys.twitterKeys.consumer_key,
     consumer_secret: keys.twitterKeys.consumer_secret,
@@ -34,8 +35,19 @@ const myTweets = function(user) {
 
   if (!user) {
     user = "cher";
+    fs.appendFileSync("log.txt", "\nget-tweets:"+"\n", function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
     console.log("You can specify a user with format 'node liri.js <user>'\n" +
       "Loading default Twitter user, @cher.\n");
+  } else {
+    fs.appendFileSync("log.txt", "\nget-tweets: "+user+"\n", function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
   }
 
   let twitterFeed = client.get("statuses/user_timeline",
@@ -63,10 +75,24 @@ const spotifyThisSong = function(song) {
    * If no song is provided then your program will default to "The Sign"
    * by Ace of Base.
    */
+
   if (!song) {
     song = '"The Sign"';
+    fs.appendFileSync("log.txt", "\nspotify-this-song:"+"\n", function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
     console.log("You can specify a song with format 'node liri.js <song>'\n" +
       "The default song is The Sign by Ace of Base.\n");
+  }
+  else {
+    fs.appendFileSync("log.txt", "\nspotify-this-song: "+ song + "\n", 
+      function(err) {
+        if (err) {
+          console.log(err);
+        }
+      });
   }
 
   const spotify = new Spotify({
@@ -117,8 +143,20 @@ const movieThis = function(movie) {
 
   if (!movie) {
     movie = '"Mr. Nobody"';
+    fs.appendFileSync("log.txt", "\nmovie-this:" + "\n", function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
     console.log("You can specify a movie with format 'node liri.js <movie>'" +
     "\nThe default movie is Mr. Nobody.\n");
+  }
+  else {
+    fs.appendFileSync("log.txt", "\nmovie-this: "+ movie + "\n", function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
   }
 
   request('http://www.omdbapi.com/?apikey=trilogy&t='+movie, /*{options: "json"},*/
@@ -146,6 +184,12 @@ const doWhatItSays = function() {
   // Using the fs Node package, LIRI will take the text inside of random.txt
   // and then use it to call one of LIRI's commands.
 
+  fs.appendFileSync("log.txt", "\ndo-what-it-says:\n", function(err) {
+    if (err) {
+      console.log(err);
+    }
+  });
+  
   fs.readFile("random.txt", "utf8", function(error, data) {
     if (error) {
       console.log(error);
@@ -176,65 +220,15 @@ switch (process.argv[2]) {
     // get-tweets makes more sense semantically, but I'm leaving my-tweets in
     // for the sake of homework
   case "get-tweets":
-    if (!process.argv[3]){
-      fs.appendFileSync("log.txt", "\nget-tweets:" + "\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-    else {
-      fs.appendFileSync("log.txt", "\nget-tweets: "+ process.argv[3] +
-        "\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
     myTweets(process.argv[3]);
     break;
   case "spotify-this-song":
-    if (!process.argv[3]){
-      fs.appendFileSync("log.txt", "\nspotify-this-song:" + "\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-    else {
-      fs.appendFileSync("log.txt", "\nspotify-this-song: "+ process.argv[3] +
-        "\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
     spotifyThisSong(process.argv[3]);
     break;
   case "movie-this":
-    if (!process.argv[3]){
-      fs.appendFileSync("log.txt", "\nmovie-this:" + "\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-    else {
-      fs.appendFileSync("log.txt", "\nmovie-this: "+ process.argv[3] +
-        "\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
     movieThis(process.argv[3]);
     break;
   case "do-what-it-says":
-    fs.appendFileSync("log.txt", "\ndo-what-it-says:\n", function(err) {
-      if (err) {
-        console.log(err);
-      }
-    });
     doWhatItSays();
     break;
   default:
