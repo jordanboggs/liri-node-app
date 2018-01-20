@@ -19,7 +19,7 @@ const logIt = function(string) {
       console.log(err);
       return;
     }
-  })
+  });
 }
 
 const myTweets = function(user) {
