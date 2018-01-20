@@ -35,7 +35,7 @@ const myTweets = function(user) {
   if (!user) {
     user = "cher";
     console.log("You can specify a user with format 'node liri.js <user>'\n" +
-      "Loading default Twitter user, @cher. But the emojis won't work :(\n");
+      "Loading default Twitter user, @cher.\n");
   }
 
   let twitterFeed = client.get("statuses/user_timeline",
