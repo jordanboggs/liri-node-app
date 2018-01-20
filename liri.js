@@ -113,33 +113,33 @@ const movieThis = function(movie) {
    * If the user doesn't type a movie in, the program will output data for the
    * movie 'Mr. Nobody.'
    */
-   const request = require("request");
+  const request = require("request");
 
-   if (!movie) {
-     movie = '"Mr. Nobody"';
-     console.log("You can specify a movie with format 'node liri.js <movie>'" +
-      "\nThe default movie is Mr. Nobody.\n");
-   }
+  if (!movie) {
+    movie = '"Mr. Nobody"';
+    console.log("You can specify a movie with format 'node liri.js <movie>'" +
+    "\nThe default movie is Mr. Nobody.\n");
+  }
 
-   request('http://www.omdbapi.com/?apikey=trilogy&t='+movie, /*{options: "json"},*/
-    function(error, response, body) {
-      if (error) {
-        console.log(error);
-        return;
-      }
-      else {
-        let parsedResponse = JSON.parse(response.body);
-        logIt("Title: " + parsedResponse.Title);
-        logIt("Year: " + parsedResponse.Year);
-        logIt("IMDB Rating: " + parsedResponse.imdbRating);
-        logIt("Rotten Tomatoes Rating: " +
-         parsedResponse.Ratings[2].Value);
-        logIt("Country: " + parsedResponse.Country);
-        logIt("Language: " + parsedResponse.Language);
-        logIt("Plot: " + parsedResponse.Plot);
-        logIt("Actors: " + parsedResponse.Actors);
-      }
-    });
+  request('http://www.omdbapi.com/?apikey=trilogy&t='+movie, /*{options: "json"},*/
+  function(error, response, body) {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    else {
+      let parsedResponse = JSON.parse(response.body);
+      logIt("Title: " + parsedResponse.Title);
+      logIt("Year: " + parsedResponse.Year);
+      logIt("IMDB Rating: " + parsedResponse.imdbRating);
+      logIt("Rotten Tomatoes Rating: " +
+        parsedResponse.Ratings[2].Value);
+      logIt("Country: " + parsedResponse.Country);
+      logIt("Language: " + parsedResponse.Language);
+      logIt("Plot: " + parsedResponse.Plot);
+      logIt("Actors: " + parsedResponse.Actors);
+    }
+  });
 };
 
 const doWhatItSays = function() {
