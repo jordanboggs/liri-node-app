@@ -59,6 +59,7 @@ const myTweets = function(user) {
     else {
       for (index = 0; index < tweets.length; index++) {
         logIt(`${(index + 1)}: ${tweets[index].text}`);
+        logIt(`Created at ${tweets[index].created_at}` + "\n");
       }
     }
   });
