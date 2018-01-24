@@ -5,126 +5,12 @@
  * January 2018
  */
 
-const keys = require("./keys.js");
-const Twitter = require("twitter");
-const Spotify = require("node-spotify-api");
 const fs = require("fs");
 
 /* Functions! */
-const logIt = function(string) {
-  // This will log the command and the data it outputs to log.txt
-  console.log(string);
-  fs.appendFileSync("log.txt", string + "\n", function(err) {
-    if (err) {
-      console.log(err);
-      return;
-    }
-  });
-}
-
-const myTweets = function(user) {
-  // This will show the last 20 tweets for a user and when they were created
-  // in your terminal/bash window.
-
-  const client = new Twitter({
-    consumer_key: keys.twitterKeys.consumer_key,
-    consumer_secret: keys.twitterKeys.consumer_secret,
-    access_token_key: keys.twitterKeys.access_token_key,
-    access_token_secret: keys.twitterKeys.access_token_secret
-  });
-
-  if (!user) {
-    user = "cher";
-    fs.appendFileSync("log.txt", "\nget-tweets:"+"\n", function(err) {
-      if (err) {
-        console.log(err);
-      }
-    });
-    console.log("You can specify a user with format 'node liri.js <user>'\n" +
-      "Loading default Twitter user, @cher.\n");
-  } else {
-    fs.appendFileSync("log.txt", "\nget-tweets: "+user+"\n", function(err) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  }
-
-  let twitterFeed = client.get("statuses/user_timeline",
-   {screen_name: user, count: 20}, function(error, tweets, response) {
-    if (error) {
-      console.log(error);
-      return;
-    }
-    else {
-      for (index = 0; index < tweets.length; index++) {
-        logIt(`${(index + 1)}: ${tweets[index].text}`);
-        logIt(`Created at ${tweets[index].created_at}` + "\n");
-      }
-    }
-  });
-};
-
-const spotifyThisSong = function(song) {
-  /*
-   * This will show the following information about the song in your4
-   * terminal/bash window:
-   * * Artist(s)
-   * * The song's name
-   * * A preview link of the song from Spotify
-   * * The album that the song is from
-   * If no song is provided then your program will default to "The Sign"
-   * by Ace of Base.
-   */
-
-  if (!song) {
-    song = '"The Sign"';
-    fs.appendFileSync("log.txt", "\nspotify-this-song:"+"\n", function(err) {
-      if (err) {
-        console.log(err);
-      }
-    });
-    console.log("You can specify a song with format 'node liri.js <song>'\n" +
-      "The default song is The Sign by Ace of Base.\n");
-  }
-  else {
-    fs.appendFileSync("log.txt", "\nspotify-this-song: "+ song + "\n", 
-      function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-  }
-
-  const spotify = new Spotify({
-    id: keys.spotifyKeys.client_id,
-    secret: keys.spotifyKeys.client_secret
-  });
-
-  spotify
-    .search({ type: 'track', query: song, limit: 5 })
-    .then(function(response) {
-      for (let itemIndex = 0; itemIndex < response.tracks.items.length; itemIndex++) {
-        let artistsArray = [];
-        for (let artistIndex = 0;
-            artistIndex < response.tracks.items[itemIndex].artists.length;
-            artistIndex++) {
-          artistsArray.push(response.tracks.items[itemIndex].artists[artistIndex]
-            .name);
-        }
-        logIt("Artist(s): " + artistsArray.join(", "));
-        logIt("Album: "+response.tracks.items[itemIndex].album.name)
-        logIt("Title: "+response.tracks.items[itemIndex].name);
-        logIt("Preview: "+response.tracks.items[itemIndex].preview_url);
-        if (response.tracks.items.length > 1 && itemIndex < response.tracks.items.length - 1) {
-          logIt("----------");
-        }
-      }
-    })
-    .catch(function(err) {
-      console.log(err);
-  });
-};
+const logIt = require("./logIt.js");
+const myTweets = require("./myTweets");
+const spotifyThisSong = require("./spotifyThisSong");
 
 const movieThis = function(movie) {
   /*
